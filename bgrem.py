@@ -110,8 +110,8 @@ def removeSkin(imgstr):
     cv.imwrite("ycrcb.png", skinYCrCb)
     removebg("ggwp.png")
 
-if __name__ == "__main__":
-    rem("shirtBlue.png")
+def init(path):
+    rem(path)
     removebg("out.png")
     removeSkin("img.png")
 
