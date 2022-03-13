@@ -19,7 +19,7 @@ def removebg(imgstr):
     _, thresh = cv.threshold(edges, 0, 255, cv.THRESH_BINARY  + cv.THRESH_OTSU)
     kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
     mask = cv.morphologyEx(thresh, cv.MORPH_CLOSE, kernel, iterations=4)
-    cv.imwrite('mask.png', mask)
+    cv.imwrite('./processing/mask.png', mask)
     data = mask.tolist()
     sys.setrecursionlimit(10**4)
     for i in  range(len(data)):
@@ -38,12 +38,12 @@ def removebg(imgstr):
     image[image ==  -1] =  0
 
     mask = np.array(image, np.uint8)
-    cv.imwrite('bg1.png', mask)
+    cv.imwrite('./processing/bg1.png', mask)
     result = cv.bitwise_and(original, original, mask=mask)
     result[mask ==  0] =  255
-    cv.imwrite('bg.png', result)
+    cv.imwrite('./processing/bg.png', result)
 
-    img = Image.open('bg.png')
+    img = Image.open('./processing/bg.png')
     img = img.convert("RGBA")
     datas = img.getdata()
 
@@ -57,7 +57,7 @@ def removebg(imgstr):
             newData.append(item)
 
     img.putdata(newData)
-    img.save("img.png", "PNG")
+    img.save("./processing/1.png", "PNG")
 
 def rem(imgstr):
     img = cv.imread(imgstr)
@@ -71,7 +71,7 @@ def rem(imgstr):
     cv.grabCut(img,mask,rect,bgdModel,fgdModel,5,cv.GC_INIT_WITH_RECT)
     mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
     img = img*mask2[:,:,np.newaxis]
-    cv.imwrite("out.png", img)
+    cv.imwrite("./processing/out.png", img)
 
 def removeSkin(imgstr):
     min_YCrCb = np.array([0,133,77],np.uint8)
@@ -97,22 +97,22 @@ def removeSkin(imgstr):
     skinRegionYCrCb = cv.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
 
     revSkinYCrCb = cv.bitwise_not(skinRegionYCrCb)
-    cv.imwrite("revskinmask1.png", revSkinYCrCb)
-    cv.imwrite("skinmask.png", skinRegionYCrCb)
+    cv.imwrite("./processing/revskinmask1.png", revSkinYCrCb)
+    cv.imwrite("./processing/skinmask.png", skinRegionYCrCb)
     #revSkinRegionYCrCb = cv2.bitwise_not(skinRegionYCrCb)
     skinYCrCb = cv.bitwise_and(image, image, mask = revSkinYCrCb)
-    cv.imwrite("skinmask1.png", skinYCrCb)
-    mask1 = cv.imread('bg1.png')
-    mask2 = cv.imread('skinmask1.png')
+    cv.imwrite("./processing/skinmask1.png", skinYCrCb)
+    mask1 = cv.imread('./processing/bg1.png')
+    mask2 = cv.imread('./processing/skinmask1.png')
     new = cv.bitwise_and(mask2, mask1, mask = None)
-    cv.imwrite('ggwp.png', new)
+    cv.imwrite('./processing/ggwp.png', new)
 
-    cv.imwrite("ycrcb.png", skinYCrCb)
-    removebg("ggwp.png")
+    cv.imwrite("./processing/ycrcb.png", skinYCrCb)
+    removebg("./processing/ggwp.png")
 
 def init(path):
     rem(path)
-    removebg("out.png")
-    removeSkin("img.png")
+    removebg("./processing/out.png")
+    removeSkin("./processing/1.png")
 
 

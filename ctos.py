@@ -27,7 +27,7 @@ def allowed_file(filename):
 def gen_frames():  # generate frame by frame from camera
     while True:
         # Capture frame-by-frame
-        imgshirt = cv2.cv2.imread("./static/uploads/1.png") 
+        imgshirt = cv2.cv2.imread("./processing/1.png") 
         shirtgray = cv2.cv2.cvtColor(imgshirt,cv2.cv2.COLOR_BGR2GRAY) #grayscale conversion
         ret, orig_masks = cv2.cv2.threshold(shirtgray,0 , 255, cv2.cv2.THRESH_BINARY) #there may be some issues with image threshold...depending on the color/contrast of image
         orig_masks_inv = cv2.cv2.bitwise_not(orig_masks)
@@ -142,6 +142,7 @@ def upload_image():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #print('upload_image filename: ' + filename)
         flash('Image successfully uploaded')
+        init("./static/uploads/1.png")
         return render_template('tryon.html')
         #return render_template('tryon.html')
     else:
