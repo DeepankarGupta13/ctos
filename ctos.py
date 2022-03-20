@@ -39,6 +39,7 @@ def gen_frames():  # generate frame by frame from camera
        
         height = img.shape[0]
         width = img.shape[1]
+        print(size)
         
         #cv2.cv2.namedWindow("img",cv2.cv2.WINDOW_NORMAL)
         #cv2.cv2.resizeWindow("img", (int(width*3/2), int(height*3/2)))
@@ -54,23 +55,88 @@ def gen_frames():  # generate frame by frame from camera
             shirtWidth =  4 * w  #approx wrt face width
             shirtHeight = shirtWidth * origshirtHeight / origshirtWidth #preserving aspect ratio of original image..
             # Center the shirt..just random calculations..
-            x1s = x-w
-            x2s =x1s+3*w
-            y1s = y+h
-            y2s = y1s+h*4
+            if(size == "small"):
+                x1s = x-0.5*w
+                x2s =x1s+2.5*w
+                y1s = y+h
+                y2s = y1s+h*4
+                if x1s < 0:
+                    x1s = 1
+                if x2s > img.shape[1]:
+                    x2s =img.shape[1]
+                if y2s > img.shape[0] :
+                    y2s =img.shape[0]
+                temp=1
+                if y1s>y2s:
+                    temp=y1s
+                    y1s=y2s
+                    y2s=temp
+            elif(size == "medium"):
+                x1s = x-1.125*w
+                x2s =x1s+3.25*w
+                y1s = y+h
+                y2s = y1s+h*4
+                if x1s < 0:
+                    x1s = 1
+                if x2s > img.shape[1]:
+                    x2s =img.shape[1]
+                if y2s > img.shape[0] :
+                    y2s =img.shape[0]
+                temp=1
+                if y1s>y2s:
+                    temp=y1s
+                    y1s=y2s
+                    y2s=temp
+            elif(size == "xtralarge"):
+                x1s = x-1.25*w
+                x2s =x1s+3.5*w
+                y1s = y+h
+                y2s = y1s+h*4.5
+                if x1s < 0:
+                    x1s = 1
+                if x2s > img.shape[1]:
+                    x2s =img.shape[1]
+                if y2s > img.shape[0] :
+                    y2s =img.shape[0]
+                temp=1
+                if y1s>y2s:
+                    temp=y1s
+                    y1s=y2s
+                    y2s=temp
+            elif(size == "xxtralarge"):
+                x1s = x-1.5*w
+                x2s =x1s+4*w
+                y1s = y+h
+                y2s = y1s+h*5
+                if x1s < 0:
+                    x1s = 1
+                if x2s > img.shape[1]:
+                    x2s =img.shape[1]
+                if y2s > img.shape[0] :
+                    y2s =img.shape[0]
+                temp=1
+                if y1s>y2s:
+                    temp=y1s
+                    y1s=y2s
+                    y2s=temp
+            else:
+                x1s = x-1*w
+                x2s =x1s+3*w
+                y1s = y+h
+                y2s = y1s+h*4
+                if x1s < 0:
+                    x1s = 1
+                if x2s > img.shape[1]:
+                    x2s =img.shape[1]
+                if y2s > img.shape[0] :
+                    y2s =img.shape[0]
+                temp=1
+                if y1s>y2s:
+                    temp=y1s
+                    y1s=y2s
+                    y2s=temp
             # Check for clipping(whetehr x1 is coming out to be negative or not..)
  
-            if x1s < 0:
-                x1s = 0
-            if x2s > img.shape[1]:
-                x2s =img.shape[1]
-            if y2s > img.shape[0] :
-                y2s =img.shape[0]
-            temp=0
-            if y1s>y2s:
-                temp=y1s
-                y1s=y2s
-                y2s=temp
             """
             if y+h >=y1s:
                 y1s = 0
@@ -88,15 +154,18 @@ def gen_frames():  # generate frame by frame from camera
             shirt = cv2.cv2.resize(imgshirt, (shirtWidth,shirtHeight), interpolation = cv2.cv2.INTER_AREA) #resize all,the masks you made,the originla image,everything
             mask = cv2.cv2.resize(orig_masks, (shirtWidth,shirtHeight), interpolation = cv2.cv2.INTER_AREA)
             masks_inv = cv2.cv2.resize(orig_masks_inv, (shirtWidth,shirtHeight), interpolation = cv2.cv2.INTER_AREA)
-            rois = img[y1s:y2s, x1s:x2s]
-            num=rois
-            roi_bgs = cv2.cv2.bitwise_and(rois,num,mask = masks_inv)
-            # roi_fg contains the image of the shirt only where the shirt is
-            roi_fgs = cv2.cv2.bitwise_and(shirt,shirt,mask = mask)
-            # join the roi_bg and roi_fg
-            dsts = cv2.cv2.add(roi_bgs,roi_fgs)
-            img[y1s:y2s, x1s:x2s] = dsts # place the joined image, saved to dst back over the original image
-            #print "blurring"        
+            try:
+                rois = img[y1s:y2s, x1s:x2s]
+                num=rois
+                roi_bgs = cv2.cv2.bitwise_and(rois,num,mask = masks_inv)
+                # roi_fg contains the image of the shirt only where the shirt is
+                roi_fgs = cv2.cv2.bitwise_and(shirt,shirt,mask = mask)
+                # join the roi_bg and roi_fg
+                dsts = cv2.cv2.add(roi_bgs,roi_fgs)
+                img[y1s:y2s, x1s:x2s] = dsts # place the joined image, saved to dst back over the original image
+            #print "blurring"
+            except:
+                print('ggwp')
             break
 
         if not ret:
@@ -143,6 +212,8 @@ def upload_image():
         #print('upload_image filename: ' + filename)
         flash('Image successfully uploaded')
         init("./static/uploads/1.png")
+        global size
+        size = request.form.get("size")
         return render_template('tryon.html')
         #return render_template('tryon.html')
     else:
