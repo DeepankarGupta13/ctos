@@ -46,7 +46,7 @@ def gen_frames():  # generate frame by frame from camera
         faces=face_cascade.detectMultiScale(gray,1.3,5)
  
         for (x,y,w,h) in faces:
-            #cv2.cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            # cv2.cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
             #cv2.cv2.rectangle(img,(100,200),(312,559),(255,255,255),2)
  
 #|||||||||||||||||||||||||||||||SHIRT||||||||||||||||||||||||||||||||||||||||

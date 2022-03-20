@@ -12,6 +12,7 @@ def removebg(imgstr):
     u = int(min(6, 6))
 
     ed = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    cv.imwrite("cvtcolour.png",ed)
     edges = cv.GaussianBlur(img, (21, 51), 3)
     edges = cv.cvtColor(edges, cv.COLOR_BGR2GRAY)
     edges = cv.Canny(edges, l, u)
