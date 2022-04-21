@@ -9,7 +9,7 @@ You need to run ctos.py in your machine.
 ```sh
 $ python ctos.py
 ```
->Open [http://127.0.0.1:5000/][PlDb]
+>Open http://127.0.0.1:5000/
 
 You will see the home page of our application.
 ![image](https://user-images.githubusercontent.com/86234577/164490321-34b1ec63-f4b2-49d7-9d6a-7ca21161ef6a.png)
